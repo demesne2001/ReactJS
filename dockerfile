@@ -1,6 +1,8 @@
 From node:alphine
-WORKDIR '/app'
+RUN mkdir '/Reactjs'
+WORKDIR '/Reactjs'
 
+COPY . /Reactjs
 COPY package.json .
 RUN npm install
 COPY . .
