@@ -21,7 +21,8 @@ pipeline {
                     a=1
                     if(a>0)
                     {
-                        
+                         bat 'docker stop frontendreact'
+                         bat 'docker rm frontendreact'
                     }
                 }
                 echo 'Docker Image done'
