@@ -31,7 +31,7 @@ pipeline {
         stage('Docker Run') {
             steps {
                 script{
-                    bat 'docker run -p 2021:2021 -d --name frontendreact frontendreact'
+                    bat 'docker run -p 3000:3000 -d --name frontendreact frontendreact'
                 }
                 echo 'Docker Running'
             }
