@@ -1,4 +1,4 @@
-From node:alphine
+From node:18.12.1
 RUN mkdir '/Reactjs'
 WORKDIR '/Reactjs'
 
