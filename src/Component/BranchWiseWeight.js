@@ -6,8 +6,6 @@ import Creatcontext from '../context/Creatcontext'
 import APIConfig from'../APIConfig'
 import post from '../ServiceFile'
 
-
-
 export default function BranchWiseWeight() {
   const [lstSeries,setlstSeries] = useState([])
   const[ToDate,setToDate]=useState('')
