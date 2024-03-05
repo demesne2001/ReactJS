@@ -1,6 +1,8 @@
 import axios from 'axios'
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useState,useContext} from 'react'
 import ReactApexChart from 'react-apexcharts'
+import Creatcontext from '../context/Creatcontext'
+import APIConfig from'../APIConfig'
 // const seriess= [{
 //   data: [{
 //     x: 'Team A',
@@ -59,12 +61,14 @@ export default function ProductWiseWeight() {
   const[lstResult,setlstResult]=useState([])
   const[series,setseries]=useState([])
   const[options,setoptions]=useState({})
-  const token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJvbUBnbWFpbC5jb20iLCJleHBpcnkiOjE3MDkzODQ4NDIuNjgzMTcyN30.c4QyRhoBp3EG8Dkc9BUU6MV2n0c0-W8wjbT9xtauoDg"
+  const FilterContext = useContext(Creatcontext);
+  console.log('contextbranch',Creatcontext)
+  let contextinput=FilterContext.CommanFilter
 
   useEffect(()=>{
-   
+    contextinput['PrintGroupBy']="ProductName,D.ProductID"
     BranchWiseWeightAPI()
-  },[])
+  },[contextinput])
   let input={
     "FromDate": FromDate,
     "ToDate": ToDate,
@@ -89,7 +93,7 @@ export default function ProductWiseWeight() {
   let productwiseTotallst=[]
   function BranchWiseWeightAPI()
 {
-   axios.post('http://127.0.0.1:8000/StockToSales/GetStockToSales',input,{headers:header}).then((res)=>{
+   axios.post(APIConfig.GetStockToSalesAPI,contextinput,{headers:header}).then((res)=>{
    
    console.log('Product',res.data)
     setlstResult(res.data.lstResult)
@@ -125,7 +129,7 @@ export default function ProductWiseWeight() {
 }
    
   return (
-    <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12">
+    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
    
     <div class="card monthlyattendance">
         <div class="card-body stockaging">

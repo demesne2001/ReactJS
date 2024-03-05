@@ -1,7 +1,8 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useContext } from 'react'
 import ReactApexChart from 'react-apexcharts'
-
+import Creatcontext from '../context/Creatcontext'
+import APIConfig from'../APIConfig'
 // const series = [{
 //   name: 'Income',
 //   type: 'column',
@@ -16,7 +17,7 @@ export default function MonthWiseWeight() {
   const [lstSeries, setlstSeries] = useState([])
   const [ToDate, setToDate] = useState('')
   const [FromDate, setFromDate] = useState('')
-  const [TotalRow, setTotalRow] = useState('7')
+  const [TotalRow, setTotalRow] = useState('')
   const [strCompanyID, setstrCompanyID] = useState('')
   const [strBranchID, setstrBranchID] = useState('')
   const [strItemGroupID, setstrItemGroupID] = useState('')
@@ -26,12 +27,13 @@ export default function MonthWiseWeight() {
   const [lstResult, setlstResult] = useState([])
   const [series, setseries] = useState([])
   const [options, setoptions] = useState({})
-  const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJvbUBnbWFpbC5jb20iLCJleHBpcnkiOjE3MDkzODQ4NDIuNjgzMTcyN30.c4QyRhoBp3EG8Dkc9BUU6MV2n0c0-W8wjbT9xtauoDg"
-
+  const FilterContext = useContext(Creatcontext);
+  console.log('contextbranch',Creatcontext)
+  let contextinput=FilterContext.CommanFilter
   useEffect(() => {
-
+    contextinput['PrintGroupBy']="MonthName,YearNo"
     MonthWiseWeightAPI()
-  }, [])
+  }, [contextinput])
   let input = {
     "FromDate": FromDate,
     "ToDate": ToDate,
@@ -53,7 +55,7 @@ export default function MonthWiseWeight() {
   let tempSeriesArr = []
   let MonthArr = []
   function MonthWiseWeightAPI() {
-    axios.post('http://127.0.0.1:8000/StockToSales/GetStockToSales', input, { headers: header }).then((res) => {
+    axios.post(APIConfig.GetStockToSalesAPI, contextinput, { headers: header }).then((res) => {
 
     console.log('Month',res.data)
       setlstResult(res.data.lstResult)
@@ -170,7 +172,7 @@ export default function MonthWiseWeight() {
   })
 
   return (
-    <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12">
+    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
 
       <div class="card monthlyattendance">
         <div class="card-body stockaging">
@@ -178,14 +180,12 @@ export default function MonthWiseWeight() {
             <i class="mdi mdi-chart-areaspline card_header font-size"></i>
             <h4 class="card-title">Month Wise Weight</h4>
           </div>
-          {/* <div class="text-center">
-             <h4>Brand Name</h4> 
-          </div> */}
+         
 
           <div class="row">
             <div class="col-12">
               {/* <div class="sales-bars-chart" style={{height: '175px',width:'auto'}}> </div> */}
-              <ReactApexChart options={options} series={series} type="line" height={350} />
+              <ReactApexChart options={options} series={series} type="line" height={357} />
             </div>
           </div>
 

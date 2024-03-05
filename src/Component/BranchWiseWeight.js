@@ -1,9 +1,10 @@
 import axios from 'axios'
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useState,useContext} from 'react'
 import ReactApexChart from 'react-apexcharts'
 import { json } from 'react-router-dom'
-
-
+import Creatcontext from '../context/Creatcontext'
+import APIConfig from'../APIConfig'
+import post from '../ServiceFile'
 
 
 
@@ -11,7 +12,7 @@ export default function BranchWiseWeight() {
   const [lstSeries,setlstSeries] = useState([])
   const[ToDate,setToDate]=useState('')
   const[FromDate,setFromDate]=useState('')
-  const[TotalRow,setTotalRow]=useState('6')
+  const[TotalRow,setTotalRow]=useState('')
   const[strCompanyID,setstrCompanyID]=useState('')
   const[strBranchID,setstrBranchID]=useState('')
   const[strItemGroupID,setstrItemGroupID]=useState('')
@@ -21,12 +22,17 @@ export default function BranchWiseWeight() {
   const[lstResult,setlstResult]=useState([])
   const[series,setseries]=useState([])
   const[options,setoptions]=useState({})
-  const token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJvbUBnbWFpbC5jb20iLCJleHBpcnkiOjE3MDkzODQ4NDIuNjgzMTcyN30.c4QyRhoBp3EG8Dkc9BUU6MV2n0c0-W8wjbT9xtauoDg"
-
+  const FilterContext = useContext(Creatcontext);
+  console.log('contextbranch',Creatcontext)
+  let contextinput=FilterContext.CommanFilter
+  let defaultRes={}
   useEffect(()=>{
-   
+  
+    console.log('contextbranch1',contextinput)  
+    console.log('contextbranchoriginal',FilterContext.CommanFilter)  
+    contextinput['PrintGroupBy']="BranchName,br.BranchID"
     BranchWiseWeightAPI()
-  },[])
+  },[contextinput])
   let input={
     "FromDate": FromDate,
     "ToDate": ToDate,
@@ -49,7 +55,8 @@ export default function BranchWiseWeight() {
   let BranchArr = []
   function BranchWiseWeightAPI()
 {
-   axios.post('http://127.0.0.1:8000/StockToSales/GetStockToSales',input,{headers:header}).then((res)=>{
+  post(contextinput,APIConfig.GetStockToSalesAPI,defaultRes,'post').then((res)=>console.log('library',res))
+   axios.post(APIConfig.GetStockToSalesAPI,contextinput,{headers:header}).then((res)=>{
    
     
     setlstResult(res.data.lstResult)
@@ -142,7 +149,7 @@ tempSeriesArr.push({
 
 
   return (
-    <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12">
+    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
    
     <div class="card monthlyattendance">
         <div class="card-body stockaging">
@@ -150,9 +157,7 @@ tempSeriesArr.push({
                 <i class="mdi mdi-chart-areaspline card_header font-size"></i>
                 <h4 class="card-title">Branch Wise Weight</h4>
             </div>
-            <div class="text-center">
-                {/* <h4>Brand Name</h4> */}
-            </div>
+           
           
             <div class="row">
                 <div class="col-12">
@@ -161,16 +166,6 @@ tempSeriesArr.push({
                 </div>
             </div>
 
-            
-            {/* <ul class="list-inline m-t-20 text-center">
-                <li>
-                    <h6 class="text-muted"><i class="fa fa-circle text-info"></i> StockQty</h6>
-                </li>
-                <li>
-                    <h6 class="text-muted"><i class="fa fa-circle text-danger"></i> SalesQty
-                    </h6>
-                </li>
-            </ul> */}
         </div>
     </div>
    

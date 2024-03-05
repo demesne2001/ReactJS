@@ -10,17 +10,22 @@ import './Component/assets/plugins/bootstrap/css/bootstrap.min.css'
 import Dashboard from './Component/Dashboard';
 import Comp8 from './Component/comp8';
 import StockToSales from './Component/StockToSales';
+import GetAndSetContext from './context/GetAndSetContext'
 
 function App() {
   return (
     <div className="App">
+       <GetAndSetContext>
     <Router>
       <Routes>
+       
         <Route path='/' element={<Dashboard/>}/>
         <Route path='/Comp8' element={<Comp8/>}/>
         <Route path='/om' element={<StockToSales/>}/>
+     
       </Routes>
       </Router>
+      </GetAndSetContext>
     </div>
   );
 }

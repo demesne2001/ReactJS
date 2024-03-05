@@ -1,21 +1,15 @@
 import axios from 'axios'
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useState,useContext} from 'react'
 import ReactApexChart from 'react-apexcharts'
-const series= [
-    {
-      name: "",
-      data: [200, 330, 548, 740, 880, 990, 1100, 1380],
-    },
-  ]
-
- 
+import APIConfig from'../APIConfig'
+import Creatcontext from '../context/Creatcontext'
 
 export default function SubItemWiseWeight() {
 
   const [lstSeries,setlstSeries] = useState([])
   const[ToDate,setToDate]=useState('')
   const[FromDate,setFromDate]=useState('')
-  const[TotalRow,setTotalRow]=useState('7')
+  const[TotalRow,setTotalRow]=useState('')
   const[strCompanyID,setstrCompanyID]=useState('')
   const[strBranchID,setstrBranchID]=useState('')
   const[strItemGroupID,setstrItemGroupID]=useState('')
@@ -25,12 +19,15 @@ export default function SubItemWiseWeight() {
   const[lstResult,setlstResult]=useState([])
   const[series,setseries]=useState([])
   const[options,setoptions]=useState({})
-  const token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJvbUBnbWFpbC5jb20iLCJleHBpcnkiOjE3MDkzODQ4NDIuNjgzMTcyN30.c4QyRhoBp3EG8Dkc9BUU6MV2n0c0-W8wjbT9xtauoDg"
+  const FilterContext = useContext(Creatcontext);
+  console.log('contextbranch',Creatcontext)
+  let contextinput=FilterContext.CommanFilter
 
   useEffect(()=>{
-   
+    contextinput['PrintGroupBy']="SubItemName,SubItemID"
+    console.log(contextinput)
     SubitenWiseWeightAPI()
-  },[])
+  },[contextinput])
   let input={
     "FromDate": FromDate,
     "ToDate": ToDate,
@@ -97,7 +94,7 @@ export default function SubItemWiseWeight() {
   }
   function SubitenWiseWeightAPI()
 {
-   axios.post('http://127.0.0.1:8000/StockToSales/GetStockToSales',input,{headers:header}).then((res)=>{
+   axios.post(APIConfig.GetStockToSalesAPI,contextinput,{headers:header}).then((res)=>{
    console.log('REq',input)
    console.log('Subitem',res.data)
     setlstResult(res.data.lstResult)
@@ -130,7 +127,7 @@ export default function SubItemWiseWeight() {
 
 }
   return (
-    <div class="col-xl-6 col-lg-12 col-md-12 col-sm-12">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
    
     <div class="card monthlyattendance">
         <div class="card-body stockaging">
