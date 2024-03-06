@@ -43,20 +43,3 @@ export default async function post(inputJson, APINAME, defaultRes, methodType) {
 
     }
 }
-// catch (E) {
-//     alert(E.Error)
-//     console.log('manaulthrow', E)
-//     defaultRes['Error'] = E
-//     return defaultRes;
-// }
-
-// async function errorHandler(callback, defaultRes) {
-//     try {
-//         return await callback()
-//     } catch (E) {
-//         alert(E)
-//         console.log('Function', E)
-//         defaultRes['Erroe'] = E
-//         return defaultRes;
-//     }
-// }
