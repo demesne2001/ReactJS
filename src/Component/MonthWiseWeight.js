@@ -3,6 +3,7 @@ import React, { useEffect, useState,useContext } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import Creatcontext from '../context/Creatcontext'
 import APIConfig from'../APIConfig'
+import post from '../ServiceFile'
 // const series = [{
 //   name: 'Income',
 //   type: 'column',
@@ -14,52 +15,29 @@ import APIConfig from'../APIConfig'
 // }]
 
 export default function MonthWiseWeight() {
-  const [lstSeries, setlstSeries] = useState([])
-  const [ToDate, setToDate] = useState('')
-  const [FromDate, setFromDate] = useState('')
-  const [TotalRow, setTotalRow] = useState('')
-  const [strCompanyID, setstrCompanyID] = useState('')
-  const [strBranchID, setstrBranchID] = useState('')
-  const [strItemGroupID, setstrItemGroupID] = useState('')
-  const [strItemID, setstrItemID] = useState('')
-  const [Unit, setUnit] = useState('KG')
-  const [PrintGroupBy, setPrintGroupBy] = useState('MonthName,YearNo')
-  const [lstResult, setlstResult] = useState([])
+
   const [series, setseries] = useState([])
   const [options, setoptions] = useState({})
   const FilterContext = useContext(Creatcontext);
-  console.log('contextbranch',Creatcontext)
-  let contextinput=FilterContext.CommanFilter
+  const [APIInput, setAPIInput] = useState(FilterContext.CommanFilter)
+  const{}=APIConfig
+  let input1 = APIInput
+  let defaultRes={}
   useEffect(() => {
-    contextinput['PrintGroupBy']="MonthName,YearNo"
+    input1['PrintGroupBy']="MonthName,YearNo"
+    setAPIInput(FilterContext.CommanFilter)
+  }, [FilterContext.CommanFilter])
+  useEffect(() => {
+    input1['PrintGroupBy']="MonthName,YearNo"    
     MonthWiseWeightAPI()
-  }, [contextinput])
-  let input = {
-    "FromDate": FromDate,
-    "ToDate": ToDate,
-    "TotalRow": TotalRow,
-    "strCompanyID": strCompanyID,
-    "strBranchID": strBranchID,
-    "strItemGroupID": strItemGroupID,
-    "strItemID": strItemID,
-    "Unit": Unit,
-    "PrintGroupBy": PrintGroupBy
-  }
-  let header = {
-    'Authorization': localStorage.getItem('token'),
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  }
+  }, [APIInput])
+  
   let tempSalesArr = []
   let tempTotalArr = []
   let tempSeriesArr = []
   let MonthArr = []
   function MonthWiseWeightAPI() {
-    axios.post(APIConfig.GetStockToSalesAPI, contextinput, { headers: header }).then((res) => {
-
-    console.log('Month',res.data)
-      setlstResult(res.data.lstResult)
-
+    post(input1, APIConfig.GetStockToSalesAPI, defaultRes, 'post').then((res) => {
 
 
       for (let i = 0; i < res.data.lstResult.length; i++) {
@@ -71,11 +49,8 @@ export default function MonthWiseWeight() {
 
       setseries(tempSeriesArr)
       setoptions(optionsdata)
-
-    }).catch()
-
-
-
+      input1 = APIInput
+    })
   }
 
   let optionsdata =

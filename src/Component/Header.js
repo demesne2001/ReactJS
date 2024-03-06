@@ -25,7 +25,7 @@ export default function Header() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const FilterContext = useContext(Creatcontext);
-    console.log('Creatcontext',Creatcontext);
+    
     
       
     function HandleValueChnage(e)
@@ -35,6 +35,7 @@ export default function Header() {
     function OnApplyEffect()
     {
         FilterContext.updatefilte(FilteComman)
+        handleClose()
     }
     return (
         <div>

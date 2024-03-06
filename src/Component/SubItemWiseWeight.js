@@ -3,47 +3,28 @@ import React,{useEffect, useState,useContext} from 'react'
 import ReactApexChart from 'react-apexcharts'
 import APIConfig from'../APIConfig'
 import Creatcontext from '../context/Creatcontext'
-
+import post from '../ServiceFile'
 export default function SubItemWiseWeight() {
-
-  const [lstSeries,setlstSeries] = useState([])
-  const[ToDate,setToDate]=useState('')
-  const[FromDate,setFromDate]=useState('')
-  const[TotalRow,setTotalRow]=useState('')
-  const[strCompanyID,setstrCompanyID]=useState('')
-  const[strBranchID,setstrBranchID]=useState('')
-  const[strItemGroupID,setstrItemGroupID]=useState('')
-  const[strItemID,setstrItemID]=useState('')
-  const[Unit,setUnit]=useState('')
-  const[PrintGroupBy,setPrintGroupBy]=useState('SubItemName,SubItemID')
-  const[lstResult,setlstResult]=useState([])
   const[series,setseries]=useState([])
   const[options,setoptions]=useState({})
   const FilterContext = useContext(Creatcontext);
-  console.log('contextbranch',Creatcontext)
-  let contextinput=FilterContext.CommanFilter
+  const [APIInput, setAPIInput] = useState(FilterContext.CommanFilter)
+  const{}=APIConfig
+  let input1 = APIInput
+  let defaultRes={}
 
   useEffect(()=>{
-    contextinput['PrintGroupBy']="SubItemName,SubItemID"
-    console.log(contextinput)
+    input1['PrintGroupBy']="SubItemName,SubItemID"
+    
+    setAPIInput(FilterContext.CommanFilter)
+  },[FilterContext.CommanFilter])
+  useEffect(()=>{
+    input1['PrintGroupBy']="SubItemName,SubItemID"
     SubitenWiseWeightAPI()
-  },[contextinput])
-  let input={
-    "FromDate": FromDate,
-    "ToDate": ToDate,
-    "TotalRow": TotalRow,
-    "strCompanyID": strCompanyID,
-    "strBranchID": strBranchID,
-    "strItemGroupID": strItemGroupID,
-    "strItemID": strItemID,
-    "Unit": Unit,
-    "PrintGroupBy": PrintGroupBy
-  }
-  let header={
-    'Authorization':localStorage.getItem('token'),
-        'Accept' : 'application/json',
-        'Content-Type': 'application/json'
-  }
+  },[APIInput])
+
+
+  
   let tempSalesArr = []
   let tempTotalArr = []
   let tempSeriesArr = []
@@ -94,34 +75,25 @@ export default function SubItemWiseWeight() {
   }
   function SubitenWiseWeightAPI()
 {
-   axios.post(APIConfig.GetStockToSalesAPI,contextinput,{headers:header}).then((res)=>{
-   console.log('REq',input)
-   console.log('Subitem',res.data)
-    setlstResult(res.data.lstResult)
-
-
-
+  post(input1, APIConfig.GetStockToSalesAPI, defaultRes, 'post').then((res) => {
     for (let i = 0; i < res.data.lstResult.length; i++) {
       tempSalesArr.push(res.data.lstResult[i].sales)
       tempTotalArr.push(res.data.lstResult[i].Total)
       SubItemArr.push(res.data.lstResult[i].SubItemName)
     }
-   console.log(tempTotalArr.sort((a, b) => a - b))
+   
     setseries(tempSeriesArr)
     setoptions(optionsdata)
-  
-  }).catch()
+  input1=APIInput
+  })
 
 
   tempSeriesArr.push({
     name:'',
-    data:tempTotalArr.sort((a, b) => a - b)  ,
-    // data:tempSalesArr.sort((a, b) => a - b)    
+    data:tempTotalArr.sort((a, b) => a - b)  
+    
   })
-  // tempSeriesArr.push({
-  //   name:'',
-  //   data:tempSalesArr   
-  // })
+ 
   
   
 

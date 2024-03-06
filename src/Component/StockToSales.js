@@ -13,7 +13,7 @@ import GetAndSetContext from '../context/GetAndSetContext'
 
 export default function StockToSales() {
     useEffect(() => {
-        localStorage.setItem('token', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJvbUBnbWFpbC5jb20iLCJleHBpcnkiOjE3MDk2NDczNzQuNzUwMjY2fQ.LQN429fBmq8g4tLrc8Yn_oCqJ9GtKnVMmcOPie0q8k0')
+        localStorage.setItem('token', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJvbUBnbWFpbC5jb20iLCJleHBpcnkiOjE3MDk3MDgxMTcuMDc3ODUwOH0.B40s-sOoD-OYCi6NGODQ6_XLPQU8xz5jyMMtywbuWBk')
     }, [])
 
     return (
@@ -24,18 +24,15 @@ export default function StockToSales() {
                 <div class="container-fluid ">
                     <div class="row">
                         <div class="col-xl-12 col-lg-7 col-md-12 col-sm-12 ">
-
                             <div class="row">
-
+                                <BranchWiseWeight />
                                 <MonthWiseWeight />
-                                <ProductWiseWeight />
-
                             </div>
                             <div class="row">
                                 <ItemWiseWeight />
-                                <BranchWiseWeight />
-
+                                <ProductWiseWeight />
                             </div>
+
                             <div class="row">
                                 <SubItemWiseWeight />
                             </div>
