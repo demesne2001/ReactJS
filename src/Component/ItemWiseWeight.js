@@ -10,6 +10,7 @@ export default function ItemWiseWeight() {
   const FilterContext = useContext(Creatcontext);
   const [series, setseries] = useState([])
   const [options, setoptions] = useState({})
+  const [strItemID, sestrItemID] = useState('')
   const [APIInput, setAPIInput] = useState(FilterContext.CommanFilter)
   let input1 = APIInput
  
@@ -17,21 +18,28 @@ export default function ItemWiseWeight() {
 
 
   useEffect(() => {
+    console.log('item1')
     input1['PrintGroupBy'] = "ItemName,a.ItemID"
     setAPIInput(FilterContext.CommanFilter)
 
   }, [FilterContext.CommanFilter])
 
   useEffect(() => {
+    console.log('item2')
     input1['PrintGroupBy'] = "ItemName,a.ItemID"
     ItemWiseWeightAPI()
   }, [APIInput])
 
+  useEffect(() => {
+    console.log('stritemid',typeof(strItemID.toString()))
+    FilterContext.updatefilte({...APIInput,["strItemID"]:strItemID.toString()})
+  }, [strItemID])
 
   let tempSalesArr = []
   let tempTotalArr = []
   let tempSeriesArr = []
   let ItemArr = []
+  let ItemIDArr = []
   let defaultRes = {}
   function ItemWiseWeightAPI() {
     post(input1, APIConfig.GetStockToSalesAPI, defaultRes, 'post').then((res) => {
@@ -40,6 +48,7 @@ export default function ItemWiseWeight() {
         tempSalesArr.push(res.data.lstResult[i].sales)
         tempTotalArr.push(res.data.lstResult[i].Total)
         ItemArr.push(res.data.lstResult[i].ItemName)
+        ItemIDArr.push(res.data.lstResult[i].ItemID)
       }
 
       setseries(tempSeriesArr)
@@ -52,7 +61,36 @@ export default function ItemWiseWeight() {
       chart: {
         height: 350,
         type: 'line',
-        stacked: false
+        stacked: false,
+        events: {
+          dataPointSelection:function(event,chartContext,config)
+          {
+            console.log('event',event)
+            console.log('chartContext',chartContext)
+            console.log('config',config.selectedDataPoints)
+            if(config.selectedDataPoints[0]===undefined)
+            {
+              console.log('configLabelID',ItemIDArr[ config.selectedDataPoints[1]])
+              console.log('configLabel',ItemArr[ config.selectedDataPoints[1]])
+              // FilterContext.updatefilte({...APIInput,["strItemID"]:ItemArr[ config.selectedDataPoints[1]].toString()})
+              console.log('type',typeof(ItemIDArr[ config.selectedDataPoints[1]]))
+              sestrItemID(ItemIDArr[ config.selectedDataPoints[1]])
+              console.log('After Update',FilterContext.CommanFilter)
+            }
+            else
+            {
+              console.log('configLabelID',ItemIDArr[ config.selectedDataPoints[0]])
+              console.log('configLabel',ItemArr[ config.selectedDataPoints[0]])
+              console.log('type',typeof(ItemIDArr[config.selectedDataPoints[0]]))
+              // FilterContext.updatefilte({...APIInput,["strItemID"]:ItemArr[ config.selectedDataPoints[1]]})
+              sestrItemID(ItemIDArr[ config.selectedDataPoints[0]])
+              console.log('After Update',FilterContext.CommanFilter)
+            }
+           
+            
+          }
+        }
+        
       },
       dataLabels: {
         enabled: false
@@ -65,6 +103,7 @@ export default function ItemWiseWeight() {
       //   align: 'left',
       //   offsetX: 110
       // },
+      // labels:ItemArr,
       xaxis: {
         categories: ItemArr,
       },

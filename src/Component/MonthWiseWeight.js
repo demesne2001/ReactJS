@@ -1,8 +1,8 @@
 import axios from 'axios'
-import React, { useEffect, useState,useContext } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import ReactApexChart from 'react-apexcharts'
 import Creatcontext from '../context/Creatcontext'
-import APIConfig from'../APIConfig'
+import APIConfig from '../APIConfig'
 import post from '../ServiceFile'
 // const series = [{
 //   name: 'Income',
@@ -13,29 +13,44 @@ import post from '../ServiceFile'
 //   type: 'column',
 //   data: [1.1, 3, 3.1, 4, 4.1, 4.9, 6.5, 8.5]
 // }]
-
+function convert(str) {
+  var date = new Date(str),
+    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+    day = ("0" + date.getDate()).slice(-2);
+  return [date.getFullYear(), mnth, day].join("-");
+}
 export default function MonthWiseWeight() {
 
   const [series, setseries] = useState([])
   const [options, setoptions] = useState({})
+  const [FromDate, setFromDate] = useState('')
+  const [ToDate, setToDate] = useState('')
   const FilterContext = useContext(Creatcontext);
   const [APIInput, setAPIInput] = useState(FilterContext.CommanFilter)
-  const{}=APIConfig
+  const { } = APIConfig
   let input1 = APIInput
-  let defaultRes={}
+  let defaultRes = {}
   useEffect(() => {
-    input1['PrintGroupBy']="MonthName,YearNo"
+    console.log('month1')
+    input1['PrintGroupBy'] = "MonthName,YearNo"
     setAPIInput(FilterContext.CommanFilter)
   }, [FilterContext.CommanFilter])
   useEffect(() => {
-    input1['PrintGroupBy']="MonthName,YearNo"    
+    console.log('month2')
+    input1['PrintGroupBy'] = "MonthName,YearNo"
     MonthWiseWeightAPI()
   }, [APIInput])
-  
+  useEffect(() => {
+    console.log('FromDate',FromDate)
+    console.log('ToDate',ToDate)
+    FilterContext.updatefilte({...APIInput,["FromDate"]:FromDate.toString(),["ToDate"]:ToDate.toString()})   
+  }, [FromDate,ToDate])
+
   let tempSalesArr = []
   let tempTotalArr = []
   let tempSeriesArr = []
   let MonthArr = []
+  let YearArr = []
   function MonthWiseWeightAPI() {
     post(input1, APIConfig.GetStockToSalesAPI, defaultRes, 'post').then((res) => {
 
@@ -45,6 +60,8 @@ export default function MonthWiseWeight() {
         tempTotalArr.push(res.data.lstResult[i].Total)
 
         MonthArr.push(res.data.lstResult[i].MonthName)
+        YearArr.push(res.data.lstResult[i].YearNo)
+
       }
 
       setseries(tempSeriesArr)
@@ -58,7 +75,44 @@ export default function MonthWiseWeight() {
     chart: {
       height: 350,
       type: 'line',
-      stacked: false
+      stacked: false,
+      events: {
+        dataPointSelection: function (event, chartContext, config) {
+          console.log('event', event)
+          console.log('chartContext', chartContext)
+          console.log('config', config.selectedDataPoints)
+          var monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+          ];
+          if (config.selectedDataPoints[0] === undefined) {
+            console.log('configLabelID', YearArr[config.selectedDataPoints[1]])
+            console.log('configLabel', MonthArr[config.selectedDataPoints[1]])
+            var month = monthNames.indexOf(MonthArr[config.selectedDataPoints[1]]);
+            var d = new Date();
+            var start = new Date(Number(YearArr[config.selectedDataPoints[1]]),month,1);
+            var end = new Date(Number(YearArr[config.selectedDataPoints[1]]),month+1,0);
+            
+            setFromDate(convert(start))
+            setToDate(convert(end))
+            // sestrItemID(ItemIDArr[ config.selectedDataPoints[1]])
+           
+          }
+          else {
+            var month = monthNames.indexOf(MonthArr[config.selectedDataPoints[0]]);
+            var d = new Date();
+            var start = new Date(Number(YearArr[config.selectedDataPoints[0]]),month,1);
+            var end = new Date(Number(YearArr[config.selectedDataPoints[0]]),month+1,0);
+            setFromDate(convert(start))
+            setToDate(convert(end))
+          
+            // FilterContext.updatefilte({...APIInput,["strItemID"]:ItemArr[ config.selectedDataPoints[1]]})
+            // sestrItemID(ItemIDArr[ config.selectedDataPoints[0]])
+            
+          }
+
+
+        }
+      }
     },
     dataLabels: {
       enabled: false
@@ -155,7 +209,7 @@ export default function MonthWiseWeight() {
             <i class="mdi mdi-chart-areaspline card_header font-size"></i>
             <h4 class="card-title">Month Wise Weight</h4>
           </div>
-         
+
 
           <div class="row">
             <div class="col-12">

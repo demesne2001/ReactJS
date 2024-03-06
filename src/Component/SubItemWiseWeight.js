@@ -14,11 +14,13 @@ export default function SubItemWiseWeight() {
   let defaultRes={}
 
   useEffect(()=>{
+    console.log('subitem1')
     input1['PrintGroupBy']="SubItemName,SubItemID"
     
     setAPIInput(FilterContext.CommanFilter)
   },[FilterContext.CommanFilter])
   useEffect(()=>{
+    console.log('subitem2')
     input1['PrintGroupBy']="SubItemName,SubItemID"
     SubitenWiseWeightAPI()
   },[APIInput])

@@ -4,7 +4,7 @@ export default async function post(inputJson, APINAME, defaultRes, methodType) {
 
     
     if (methodType === "post") {
-
+console.log('APIInput',inputJson)
         let header = {
             'Authorization': localStorage.getItem('token'),
             'Accept': 'application/json',
@@ -12,7 +12,7 @@ export default async function post(inputJson, APINAME, defaultRes, methodType) {
         }
         return await axios.post(APINAME, inputJson, { headers: header })
             .then((res) => {
-               
+                console.log('APIInputres',res)
                 if (res.data.HasError === true) 
                 {
                     
@@ -28,13 +28,13 @@ export default async function post(inputJson, APINAME, defaultRes, methodType) {
             })
             .catch((E) => {
                 if (E.status === 200) {
-                    alert(E.statusText)
+                    
                     defaultRes['Error'] = E.statusText
                     return defaultRes
                     // throw defaultRes
                 }
                 else {
-                    alert(E.response.statusText)
+                    
                     defaultRes['Error'] = E.response.statusText + " " + E.response.status
                     return defaultRes
                     // throw defaultRes

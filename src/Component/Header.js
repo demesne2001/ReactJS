@@ -1,4 +1,4 @@
-import React, { useState,useContext} from 'react'
+import React, { useState, useContext } from 'react'
 import user from './assets/images/users/1.jpg'
 import Modal from 'react-bootstrap/Modal';
 import './css/style.css';
@@ -10,7 +10,7 @@ import Creatcontext from '../context/Creatcontext'
 
 
 export default function Header() {
-    let input={
+    let input = {
         "FromDate": "",
         "ToDate": "",
         "TotalRow": "",
@@ -19,23 +19,33 @@ export default function Header() {
         "strItemGroupID": "",
         "strItemID": "",
         "Unit": ""
-      }
+    }
     const [show, setShow] = useState(false);
     const [FilteComman, setFilteComman] = useState(input);
+    const [FilteComman2, setFilteComman2] = useState(input);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const FilterContext = useContext(Creatcontext);
-    
-    
-      
-    function HandleValueChnage(e)
-    {
-        setFilteComman({...FilteComman,[e.target.name]:e.target.value})
-    }
-    function OnApplyEffect()
-    {
+
+    function OnRestEffect() {
+        setFilteComman(input)
+        setFilteComman2(FilteComman)
         FilterContext.updatefilte(FilteComman)
         handleClose()
+    }
+    function HandleValueChnage(e) {
+        setFilteComman({ ...FilteComman, [e.target.name]: e.target.value })
+    }
+    function OnApplyEffect() {
+        if (FilteComman === FilteComman2) {
+            handleClose()
+        }
+        else {
+            setFilteComman2(FilteComman)
+            FilterContext.updatefilte(FilteComman)
+            handleClose()
+        }
+
     }
     return (
         <div>
@@ -53,18 +63,18 @@ export default function Header() {
                                 <button
                                     class="right-side-toggle waves-effect waves-light btn-inverse btn btn-circle btn-sm pull-right m-l-10"
                                     onClick={handleShow}><i class="mdi mdi-filter-outline"></i></button>
-                                <h6 class="headalign"> <input type="date" class="date1" /></h6>                                
+                                <h6 class="headalign"> <input type="date" class="date1" /></h6>
                                 <Modal show={show} onHide={handleClose}>
                                     <Modal.Header >
                                         <div class="rpanel-title"> <i class="mdi mdi-filter-outline filter "></i> FILTER <span><i
-                                            class="ti-close right-side-toggle" style={{alignSelf:"left"}} onClick={handleClose}></i></span> </div>
+                                            class="ti-close right-side-toggle" style={{ alignSelf: "left" }} onClick={handleClose}></i></span> </div>
                                     </Modal.Header>
                                     <Modal.Body>
                                         <div>
                                             <label for="fromdate">Fromdate : </label>
-                                            <input type="date" name="FromDate" value={FilteComman.FromDate} onChange={HandleValueChnage}/>
+                                            <input type="date" name="FromDate" value={FilteComman.FromDate} onChange={HandleValueChnage} />
                                             <label for="ToDate">Todate : </label>
-                                            <input type="date" name="ToDate" value={FilteComman.ToDate} onChange={HandleValueChnage}/>
+                                            <input type="date" name="ToDate" value={FilteComman.ToDate} onChange={HandleValueChnage} />
                                         </div>
                                         <div>
                                             <div class="titlealign">
@@ -78,9 +88,9 @@ export default function Header() {
                                             </select>
                                             <label>Branch Name : </label>
                                             <select class="custom-select my-1 mr-sm-2" name="strBranchID" value={FilteComman.strBranchID} onChange={HandleValueChnage}>
-                                            <option value="" selected>All</option>
-                                                <option value="2" >Thaltej</option>
-                                                <option value="1">Prahlad Nagar</option>
+                                                <option value="" selected>All</option>
+                                                <option value="1" >Thaltej</option>
+                                                <option value="3">Prahlad Nagar</option>
                                             </select>
                                             <div class="titlealign">
                                                 <h4>--CURRENCY--</h4>
@@ -103,7 +113,10 @@ export default function Header() {
                                             <div class="buttonalign">
                                                 <button type="button"
                                                     class="btn waves-effect waves-light btn-outline-secondary " onClick={OnApplyEffect}>Apply</button>
+                                                    <button type="button"
+                                                    class="btn waves-effect waves-light btn-outline-secondary " onClick={OnRestEffect}>Reset</button>
                                             </div>
+                                            
                                         </div>
 
                                     </Modal.Body>

@@ -9,6 +9,15 @@ const optionsdata= {
   chart: {
     type: 'rangeBar',
     height: 350,
+    events: {
+      dataPointSelection:function(event,chartContext,config)
+      {
+        console.log('event',event)
+        console.log('chartContext',chartContext)
+        console.log('config',config.xaxis)
+        
+      }
+    }
 
   },
   plotOptions: {
@@ -30,11 +39,13 @@ export default function ProductWiseWeight() {
   let defaultRes={}
 
   useEffect(()=>{
+    console.log('Product1')
     input1['PrintGroupBy']="ProductName,D.ProductID"
     setAPIInput(FilterContext.CommanFilter)   
   },[FilterContext.CommanFilter])
 
   useEffect(()=>{
+    console.log('Product2')
     input1['PrintGroupBy']="ProductName,D.ProductID" 
     BranchWiseWeightAPI()
   },[APIInput])

@@ -13,7 +13,7 @@ import GetAndSetContext from '../context/GetAndSetContext'
 
 export default function StockToSales() {
     useEffect(() => {
-        localStorage.setItem('token', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJvbUBnbWFpbC5jb20iLCJleHBpcnkiOjE3MDk3MjQ2NjMuNDU3MzE4fQ.cUmlDE4FEP6mPd4s0dUiopxioUxsUM6ITwWvcsSjNIE')
+        localStorage.setItem('token', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySUQiOiJvbUBnbWFpbC5jb20iLCJleHBpcnkiOjE3MDk3MzczNjIuMjE0MTh9.A4m3TLpv4WuqQs-uviBCPgzwrbxEuUIpbyiUjxuq6Q4')
     }, [])
 
     return (

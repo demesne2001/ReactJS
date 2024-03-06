@@ -18,10 +18,12 @@ export default function BranchWiseWeight() {
   let defaultRes = {}
   useEffect(() => {
     setAPIInput(FilterContext.CommanFilter)
+    console.log('Branch1')
     input1['PrintGroupBy'] = "BranchName,br.BranchID"
   }, [FilterContext.CommanFilter])
 
   useEffect(() => {
+    console.log('Branch2')
     input1['PrintGroupBy'] = "BranchName,br.BranchID"
     BranchWiseWeightAPI()
 
