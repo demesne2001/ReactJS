@@ -6,6 +6,7 @@ import Creatcontext from '../context/Creatcontext'
 import post from '../ServiceFile'
 export default function SubItemWiseWeight() {
   const[series,setseries]=useState([])
+  // const[strSubItemID,setstrSubItemID]=useState('')
   const[options,setoptions]=useState({})
   const FilterContext = useContext(Creatcontext);
   const [APIInput, setAPIInput] = useState(FilterContext.CommanFilter)
@@ -24,17 +25,36 @@ export default function SubItemWiseWeight() {
     input1['PrintGroupBy']="SubItemName,SubItemID"
     SubitenWiseWeightAPI()
   },[APIInput])
-
+  // useEffect(()=>{
+  //   if(strSubItemID !='')
+  //   {
+  //     FilterContext.updatefilte({...APIInput,["strItemID"]:strItemID.toString()})
+  //   }
+  // },[strSubItemID])
 
   
   let tempSalesArr = []
   let tempTotalArr = []
   let tempSeriesArr = []
   let SubItemArr = []
+  let SubItemIDarr=[]
   let optionsdata= {
     chart: {
       type: 'bar',
       height: 350,
+      // events: {
+      //   dataPointSelection:function(event,chartContext,config)
+      //   {            
+      //     if(config.selectedDataPoints[0]===undefined)
+      //     {
+      //       sestrItemID(SubItemIDarr[ config.selectedDataPoints[1]])
+      //     }
+      //     else
+      //     {              
+      //       sestrItemID(SubItemIDarr[ config.selectedDataPoints[0]])             
+      //     }   
+      //   }
+      // }
     },
     plotOptions: {
       bar: {
@@ -82,6 +102,7 @@ export default function SubItemWiseWeight() {
       tempSalesArr.push(res.data.lstResult[i].sales)
       tempTotalArr.push(res.data.lstResult[i].Total)
       SubItemArr.push(res.data.lstResult[i].SubItemName)
+      SubItemIDarr.push(res.data.lstResult[i].SubItemID)
     }
    
     setseries(tempSeriesArr)

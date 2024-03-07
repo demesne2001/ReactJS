@@ -41,9 +41,10 @@ export default function MonthWiseWeight() {
     MonthWiseWeightAPI()
   }, [APIInput])
   useEffect(() => {
-    console.log('FromDate',FromDate)
-    console.log('ToDate',ToDate)
-    FilterContext.updatefilte({...APIInput,["FromDate"]:FromDate.toString(),["ToDate"]:ToDate.toString()})   
+    if(FromDate !=''|| ToDate !='')
+    {
+      FilterContext.updatefilte({...APIInput,["FromDate"]:FromDate.toString(),["ToDate"]:ToDate.toString()})   
+    }
   }, [FromDate,ToDate])
 
   let tempSalesArr = []

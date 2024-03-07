@@ -11,6 +11,7 @@ import Dashboard from './Component/Dashboard';
 import Comp8 from './Component/comp8';
 import StockToSales from './Component/StockToSales';
 import GetAndSetContext from './context/GetAndSetContext'
+import ProductDetail from './Component/ProductDetail';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path='/' element={<Dashboard/>}/>
         <Route path='/Comp8' element={<Comp8/>}/>
         <Route path='/om' element={<StockToSales/>}/>
+        <Route path='/Productdetail' element={<ProductDetail/>}/>
      
       </Routes>
       </Router>

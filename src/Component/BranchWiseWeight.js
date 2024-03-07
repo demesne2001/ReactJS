@@ -9,6 +9,7 @@ import post from '../ServiceFile'
 export default function BranchWiseWeight() {
   const [series, setseries] = useState([])
   const [options, setoptions] = useState({})
+  const [BranchID, setBranchID] = useState('')
   const FilterContext = useContext(Creatcontext);
   const [APIInput, setAPIInput] = useState(FilterContext.CommanFilter)
   const{}=APIConfig
@@ -26,13 +27,20 @@ export default function BranchWiseWeight() {
     console.log('Branch2')
     input1['PrintGroupBy'] = "BranchName,br.BranchID"
     BranchWiseWeightAPI()
-
   }, [APIInput])
+
+  useEffect(() => {
+    if(BranchID !='')
+    {
+      FilterContext.updatefilte({...APIInput,["strBranchID"]:BranchID.toString()})
+    }
+  }, [BranchID])
 
   let tempSalesArr = []
   let tempTotalArr = []
   let tempSeriesArr = []
   let BranchArr = []
+  let BranchIDArr = []
   function BranchWiseWeightAPI() {
     post(input1, APIConfig.GetStockToSalesAPI, defaultRes, 'post').then((res) => {
       
@@ -40,6 +48,8 @@ export default function BranchWiseWeight() {
         tempSalesArr.push(res.data.lstResult[i].sales)
         tempTotalArr.push(res.data.lstResult[i].Total)
         BranchArr.push(res.data.lstResult[i].BranchName)
+        BranchIDArr.push(res.data.lstResult[i].BranchID)
+        
       }
       setseries(tempSeriesArr)
       setoptions(optionsdata)
@@ -53,6 +63,19 @@ export default function BranchWiseWeight() {
       height: 350,
       width: 500,
       type: 'line',
+      events: {
+        dataPointSelection:function(event,chartContext,config)
+        {            
+          if(config.selectedDataPoints[0]===undefined)
+          {
+            setBranchID(BranchIDArr[ config.selectedDataPoints[1]])
+          }
+          else
+          {              
+            setBranchID(BranchIDArr[ config.selectedDataPoints[0]])             
+          }   
+        }
+      }
     },
     stroke: {
       width: [0, 4]

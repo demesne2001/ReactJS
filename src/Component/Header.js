@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import user from './assets/images/users/1.jpg'
 import Modal from 'react-bootstrap/Modal';
 import './css/style.css';
@@ -6,11 +6,15 @@ import './css/spinners.css';
 import './css/animate.css';
 import './assets/plugins/bootstrap/css/bootstrap.min.css'
 import Creatcontext from '../context/Creatcontext'
+import APIConfig from '../APIConfig'
+
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 
 
 export default function Header() {
-    let input = {
+    const input = {
         "FromDate": "",
         "ToDate": "",
         "TotalRow": "",
@@ -18,7 +22,7 @@ export default function Header() {
         "strBranchID": "",
         "strItemGroupID": "",
         "strItemID": "",
-        "Unit": ""
+        "Unit": "KG"
     }
     const [show, setShow] = useState(false);
     const [FilteComman, setFilteComman] = useState(input);
@@ -26,22 +30,67 @@ export default function Header() {
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const FilterContext = useContext(Creatcontext);
+    useEffect(() => {
+        console.log('before', FilteComman)
+        setFilteComman(FilterContext.CommanFilter)
 
+    }, [FilterContext])
     function OnRestEffect() {
-        setFilteComman(input)
-        setFilteComman2(FilteComman)
-        FilterContext.updatefilte(FilteComman)
-        handleClose()
-    }
-    function HandleValueChnage(e) {
-        setFilteComman({ ...FilteComman, [e.target.name]: e.target.value })
-    }
-    function OnApplyEffect() {
-        if (FilteComman === FilteComman2) {
+        var applyFiltercomman = { ...FilteComman }
+        var applyFiltercomman2 = { ...FilteComman2 }
+        delete applyFiltercomman['PrintGroupBy']
+        delete applyFiltercomman2['PrintGroupBy']
+
+        console.log('FilteComman', FilteComman)
+        console.log('FilteComman2', FilteComman2)
+
+        if (JSON.stringify(input) === JSON.stringify(applyFiltercomman)) {
+            setFilteComman(input)
             handleClose()
         }
         else {
+            setFilteComman(input)
+            setFilteComman2(input)
+            FilterContext.updatefilte(input)
+            handleClose()
+        }
+    }
+    function HandleValueChnage(e) {
+        console.log('inputchange', input)
+        setFilteComman({ ...FilteComman, [e.target.name]: e.target.value })
+    }
+    function Validate() {
+        axios.post(APIConfig.LoginAPI, {
+            "email": "om@gmail.com",
+            "password": "12345"
+        }).then((res) => {
+            if (res.data.HasError === true) {
+                console.log('validate Log manual Log', res)
+            }
+            else {
+                // console.log('Login True',res.data['acsess token'])
+                localStorage.setItem('token', 'Bearer' + ' ' + res.data['acsess token'])
+            }
+        })
+    }
+    function OnApplyEffect() {
+
+        var applyFiltercomman = { ...FilteComman }
+        var applyFiltercomman2 = { ...FilteComman2 }
+        delete applyFiltercomman['PrintGroupBy']
+        delete applyFiltercomman2['PrintGroupBy']
+
+
+
+        if (JSON.stringify(applyFiltercomman) === JSON.stringify(applyFiltercomman2)) {
+            handleClose()
+        }
+        else {
+            console.log('input1', applyFiltercomman)
+            console.log('input2', applyFiltercomman2)
+
             setFilteComman2(FilteComman)
+
             FilterContext.updatefilte(FilteComman)
             handleClose()
         }
@@ -55,14 +104,20 @@ export default function Header() {
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6  align-self-center">
                             <div class="page-title-alignment">
                                 <img src={user} alt="user" class="profile-pic" />
-                                <h3 class="text-themecolor header-title">CEO-DASHBOARD</h3>
+                                <h3 class="text-themecolor header-title">CEO-DASHBOARD</h3>                                
+                            </div>
+                            <div class="page-title-alignment">
+                            <Link to='/om'> Live Date</Link>                                
+                            <button class="" onClick={Validate}>Validate</button>
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 align-self-center">
+                           
                             <div class="title-date">
                                 <button
                                     class="right-side-toggle waves-effect waves-light btn-inverse btn btn-circle btn-sm pull-right m-l-10"
                                     onClick={handleShow}><i class="mdi mdi-filter-outline"></i></button>
+                               
                                 <h6 class="headalign"> <input type="date" class="date1" /></h6>
                                 <Modal show={show} onHide={handleClose}>
                                     <Modal.Header >
@@ -110,13 +165,20 @@ export default function Header() {
                                                 <option value="10">10</option>
                                                 <option value="25">25</option>
                                             </select>
+                                            <label>Item:</label>
+                                            <select class="custom-select my-1 mr-sm-2" name="strItemID" value={FilteComman.strItemID} onChange={HandleValueChnage}>
+                                                <option value="" selected>2</option>
+                                                <option value="1" >5</option>
+                                                <option value="121">10</option>
+                                                <option value="25">25</option>
+                                            </select>
                                             <div class="buttonalign">
                                                 <button type="button"
                                                     class="btn waves-effect waves-light btn-outline-secondary " onClick={OnApplyEffect}>Apply</button>
-                                                    <button type="button"
+                                                <button type="button"
                                                     class="btn waves-effect waves-light btn-outline-secondary " onClick={OnRestEffect}>Reset</button>
                                             </div>
-                                            
+
                                         </div>
 
                                     </Modal.Body>

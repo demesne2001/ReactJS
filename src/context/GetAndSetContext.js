@@ -11,7 +11,7 @@ export default function GetAndSetContext(props) {
         strBranchID: "",
         strItemGroupID: "",
         strItemID: "",
-        Unit: "",
+        Unit: "KG",
     } 
 
     const[CommanFilter,SetCommanFilter]=useState(commanFilterDefault);

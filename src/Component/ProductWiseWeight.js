@@ -5,31 +5,36 @@ import Creatcontext from '../context/Creatcontext'
 import APIConfig from'../APIConfig'
 import post from '../ServiceFile'
 
-const optionsdata= {
-  chart: {
-    type: 'rangeBar',
-    height: 350,
-    events: {
-      dataPointSelection:function(event,chartContext,config)
-      {
-        console.log('event',event)
-        console.log('chartContext',chartContext)
-        console.log('config',config.xaxis)
-        
-      }
-    }
+import ProductDetail from './ProductDetail'
+import { useNavigate } from 'react-router-dom'
 
-  },
-  plotOptions: {
-    bar: {
-      horizontal: false
-    }
-  },
-  dataLabels: {
-    enabled: true
-  }
-}
+
 export default function ProductWiseWeight() {
+  const optionsdata= {
+    chart: {
+      type: 'rangeBar',
+      height: 350,
+      events: {
+        dataPointSelection:function(event,chartContext,config)
+        {
+          EventCha()
+        }
+      }
+  
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false
+      }
+    },
+    dataLabels: {
+      enabled: true
+    }
+  }
+  const navigate=useNavigate()
+  function EventCha(){
+    navigate('/')
+  }
 
   const[series,setseries]=useState([])
   const FilterContext = useContext(Creatcontext);

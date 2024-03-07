@@ -4,7 +4,7 @@ export default async function post(inputJson, APINAME, defaultRes, methodType) {
 
     
     if (methodType === "post") {
-console.log('APIInput',inputJson)
+
         let header = {
             'Authorization': localStorage.getItem('token'),
             'Accept': 'application/json',
@@ -12,7 +12,7 @@ console.log('APIInput',inputJson)
         }
         return await axios.post(APINAME, inputJson, { headers: header })
             .then((res) => {
-                console.log('APIInputres',res)
+               
                 if (res.data.HasError === true) 
                 {
                     

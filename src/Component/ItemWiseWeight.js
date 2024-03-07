@@ -16,7 +16,6 @@ export default function ItemWiseWeight() {
  
 
 
-
   useEffect(() => {
     console.log('item1')
     input1['PrintGroupBy'] = "ItemName,a.ItemID"
@@ -30,9 +29,11 @@ export default function ItemWiseWeight() {
     ItemWiseWeightAPI()
   }, [APIInput])
 
-  useEffect(() => {
-    console.log('stritemid',typeof(strItemID.toString()))
-    FilterContext.updatefilte({...APIInput,["strItemID"]:strItemID.toString()})
+  useEffect(() => {   
+    if(strItemID !='')
+    {
+      FilterContext.updatefilte({...APIInput,["strItemID"]:strItemID.toString()})
+    }
   }, [strItemID])
 
   let tempSalesArr = []
@@ -64,30 +65,15 @@ export default function ItemWiseWeight() {
         stacked: false,
         events: {
           dataPointSelection:function(event,chartContext,config)
-          {
-            console.log('event',event)
-            console.log('chartContext',chartContext)
-            console.log('config',config.selectedDataPoints)
+          {            
             if(config.selectedDataPoints[0]===undefined)
             {
-              console.log('configLabelID',ItemIDArr[ config.selectedDataPoints[1]])
-              console.log('configLabel',ItemArr[ config.selectedDataPoints[1]])
-              // FilterContext.updatefilte({...APIInput,["strItemID"]:ItemArr[ config.selectedDataPoints[1]].toString()})
-              console.log('type',typeof(ItemIDArr[ config.selectedDataPoints[1]]))
               sestrItemID(ItemIDArr[ config.selectedDataPoints[1]])
-              console.log('After Update',FilterContext.CommanFilter)
             }
             else
-            {
-              console.log('configLabelID',ItemIDArr[ config.selectedDataPoints[0]])
-              console.log('configLabel',ItemArr[ config.selectedDataPoints[0]])
-              console.log('type',typeof(ItemIDArr[config.selectedDataPoints[0]]))
-              // FilterContext.updatefilte({...APIInput,["strItemID"]:ItemArr[ config.selectedDataPoints[1]]})
-              sestrItemID(ItemIDArr[ config.selectedDataPoints[0]])
-              console.log('After Update',FilterContext.CommanFilter)
-            }
-           
-            
+            {              
+              sestrItemID(ItemIDArr[ config.selectedDataPoints[0]])             
+            }   
           }
         }
         
