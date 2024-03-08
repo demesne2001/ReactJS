@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from './Header'
 import Comp from './comp'
 import Comp2 from './comp2'
@@ -19,9 +19,31 @@ import './css/style.css';
 import './css/spinners.css';
 import './css/animate.css';
 import './assets/plugins/bootstrap/css/bootstrap.min.css'
+import axios from 'axios'
+import APIConfig from '../APIConfig'
 
 
 export default function Dashboard() {
+    Validate()
+    const [count,setcount]=useState(1)
+    useEffect(()=>{
+        Validate()
+    },[count])
+    function Validate() {
+        axios.post(APIConfig.LoginAPI, {
+            "email": "om@gmail.com",
+            "password": "12345"
+        }).then((res) => {
+            if (res.data.HasError === true) {
+                console.log('validate Log manual Log', res)
+                setcount(count+1)
+            }
+            else {
+                // console.log('Login True',res.data['acsess token'])
+                localStorage.setItem('token', 'Bearer' + ' ' + res.data['acsess token'])
+            }
+        })
+    }
   return (
     
     <div class="page-wrapper" id="myDIV1">

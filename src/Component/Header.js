@@ -59,20 +59,7 @@ export default function Header() {
         console.log('inputchange', input)
         setFilteComman({ ...FilteComman, [e.target.name]: e.target.value })
     }
-    function Validate() {
-        axios.post(APIConfig.LoginAPI, {
-            "email": "om@gmail.com",
-            "password": "12345"
-        }).then((res) => {
-            if (res.data.HasError === true) {
-                console.log('validate Log manual Log', res)
-            }
-            else {
-                // console.log('Login True',res.data['acsess token'])
-                localStorage.setItem('token', 'Bearer' + ' ' + res.data['acsess token'])
-            }
-        })
-    }
+    
     function OnApplyEffect() {
 
         var applyFiltercomman = { ...FilteComman }
@@ -108,7 +95,7 @@ export default function Header() {
                             </div>
                             <div class="page-title-alignment">
                             <Link to='/om'> Live Date</Link>                                
-                            <button class="" onClick={Validate}>Validate</button>
+                            {/* <button class="" onClick={Validate}>Validate</button> */}
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-xs-6 align-self-center">
